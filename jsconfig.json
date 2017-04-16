@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "allowSyntheticDefaultImports": true
+    },
+    "include": [
+        "lib/**/*"
+    ],
+    "exclude": [
+        "lib/script.js"
+    ],
+    "files": [
+        "src/script.es6"
+    ]
+}
