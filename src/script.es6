@@ -150,7 +150,7 @@ import Charsets from 'charsets.js';
                 container.find($(".password-charset")).text(charset);
                 container.find($(".password-complexity")).text(found_dict ? (dict_result[1]*100) + "% similar to " + dict_result[0] + " (ignoring case)": complexity);
                 container.find($(".password-time")).text(found_dict ? "Really Quick" : getTime(time_in_seconds));
-                container.find($(".password-method")).text(found_dict ? "Dictionary Attack!" : "Brute Force");
+                container.find($(".password-method")).text(found_dict ? (dict_result[1] == 1 ? "Dictionary Attack!" : "Hybrid Attack") : "Brute Force");
             }
         }
     });
