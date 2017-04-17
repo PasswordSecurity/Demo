@@ -138,10 +138,11 @@ import Charsets from 'charsets.js';
             this.element.parent().find(".password-check-container").remove();
         },
         value: function(password) {
+            var container = this.element.parent();
             this.options.password = password;
             if (password !== undefined && password.length > 0)
             {
-                var container = this.element.parent();
+
                 var charset = Charsets.getCharsetsCharacterCount(password);
                 var complexity = Math.pow(charset, password.length);
                 var time_in_seconds = complexity / this.options.speed;
@@ -151,6 +152,12 @@ import Charsets from 'charsets.js';
                 container.find($(".password-complexity")).text(found_dict ? (dict_result[1]*100) + "% similar to " + dict_result[0] + " (ignoring case)": complexity);
                 container.find($(".password-time")).text(found_dict ? "Really Quick" : getTime(time_in_seconds));
                 container.find($(".password-method")).text(found_dict ? (dict_result[1] == 1 ? "Dictionary Attack!" : "Hybrid Attack") : "Brute Force");
+            } else
+            {
+                container.find($(".password-charset")).text("");
+                container.find($(".password-complexity")).text("");
+                container.find($(".password-time")).text("");
+                container.find($(".password-method")).text("");
             }
         }
     });
