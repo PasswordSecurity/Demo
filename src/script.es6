@@ -2,6 +2,7 @@ window.jQuery = window.$ = require('jquery');
 require('jquery-ui');
 import levenshtein from 'levenshtein.js';
 import {johnList} from 'john.js';
+import {subDict} from 'substitution.js';
 import Charsets from 'charsets.js';
 
 
@@ -12,32 +13,7 @@ import Charsets from 'charsets.js';
     }
     function allSubstitution(strin)
     {
-        var rule = {
-            'a':['4','@'],
-            'A':['4','@'],
-            'b':['6','|3'],
-            'B':['6','|3'],
-            'c':['<','{'],
-            'C':['<','{'],
-            'e':['3'],
-            'E':['3'],
-            'g':['9'],
-            'G':['9'],
-            'i':['1','!'],
-            'I':['1','!'],
-            'o':['0'],
-            'O':['0'],
-            'q':['9'],
-            'Q':['9'],
-            's':['5','$'],
-            'S':['5','$'],
-            't':['7','+'],
-            'T':['7','+'],
-            'x':['%'],
-            'X':['%'],
-        };
-
-
+        var rule = subDict;
         var stack = [[strin,0]];
         var ret = [];
         var rule_keys = Object.keys(rule);
@@ -69,7 +45,6 @@ import Charsets from 'charsets.js';
         allSubstitution(val).forEach(v => acc.push(v.toLowerCase()));
         return acc;
     }, []);
-    console.log(wordList);
     function getTime(d)
     {
         var r = {};
@@ -126,28 +101,68 @@ import Charsets from 'charsets.js';
                             .insertAfter(this.element);
 
             this.options.password = this.element.val();
-            this.options.speed = 100000000000;
+            this.options.speed = 1072000000;
             this.options.threshhold = .8;
+            this.options.dict = true;
             self.value(0);
             this.element.on("input paste", function(){
                 self.value($(this).val());
             });
+            this._super();
         },
         _destroy: function (){
             this.element.removeClass("password-check");
             this.element.parent().find(".password-check-container").remove();
         },
-        value: function(password) {
+        _setOption: function(key, value) {
+            var self = this;
+            if (value !== undefined)
+            {
+                var fnList = {
+                    'password': function() {
+                        self.recalculate();
+                    },
+                    'speed': function() {
+                        self.recalculate();
+                    },
+                    'threshhold': function(){
+                        self.recalculate();
+                    },
+                    'dict': function(){
+                        self.recalculate();
+                    }
+                }
+
+                this._super( key, value );
+
+                if (key in fnList)
+                {
+                    fnList[key]();
+                }
+            
+                return this.options[key];
+
+            }
+            else
+                return this.options[key];
+        },
+        recalculate: function()
+        {
+            var password = this.options.password;
             var container = this.element.parent();
-            this.options.password = password;
             if (password !== undefined && password.length > 0)
             {
 
                 var charset = Charsets.getCharsetsCharacterCount(password);
                 var complexity = Math.pow(charset, password.length);
                 var time_in_seconds = complexity / this.options.speed;
-                var dict_result = findDict(password.toLowerCase(), this.options.threshhold);
-                var found_dict = dict_result !== undefined;
+                var found_dict = false
+                var dict_result = undefined;
+                if (this.options.dict)
+                {
+                    dict_result = findDict(password.toLowerCase(), this.options.threshhold);
+                    found_dict = dict_result !== undefined;
+                }
                 container.find($(".password-charset")).text(charset);
                 container.find($(".password-complexity")).text(found_dict ? (dict_result[1]*100) + "% similar to " + dict_result[0] + " (ignoring case)": complexity);
                 container.find($(".password-time")).text(found_dict ? "Really Quick" : getTime(time_in_seconds));
@@ -159,6 +174,10 @@ import Charsets from 'charsets.js';
                 container.find($(".password-time")).text("");
                 container.find($(".password-method")).text("");
             }
+        },
+        value: function(password) {
+            this.options.password = password;
+            this.recalculate();
         }
     });
 })();

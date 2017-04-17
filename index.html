@@ -7,6 +7,19 @@
     <script>
         $(function() {
             $("#password").checkPassword();
+            $("#speed").val($("#password").checkPassword("option", "speed"));
+            $("#speed").on("input paste", function(){
+                $("#password").checkPassword("option", "speed", parseInt($(this).val()));
+            });
+            $("#threshhold").val($("#password").checkPassword("option", "threshhold"));
+            $("#threshhold").on("input paste", function(){
+                $("#password").checkPassword("option", "threshhold", parseInt($(this).val()));
+            });
+            $("#dictionary").prop("checked", $("#password").checkPassword("option", "dict"));
+            $
+            $("#dictionary").change(function(){
+                $("#password").checkPassword("option", "dict", $(this).prop("checked"));
+            })
         });
     </script>
 </head>
@@ -16,8 +29,15 @@
     </div>
 
 
-    <br> <br> <br>
+    <br><br>Options:<br><br>
+    <input type="checkbox" id="dictionary" value="Dictionary Attack">Dictionary Attack<br><br>
+    Speed:<br>
+    <input type="text" id="speed"><br><br>
+    Dictionary Attack Threshhold:<br>
+    <input type="text" id="threshhold"><br><br>
 
+
+    <br><br>
     Source Code: <a href=https://github.com/PasswordSecurity/Demo>Github</a>
 </body>
 </html>
