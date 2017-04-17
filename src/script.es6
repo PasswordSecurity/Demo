@@ -1,7 +1,7 @@
 window.jQuery = window.$ = require('jquery');
 require('jquery-ui');
 import levenshtein from 'levenshtein.js';
-import {johnList} from 'john.js';
+import {wordList as _wordList} from 'wordlist.js';
 import {subDict} from 'substitution.js';
 import Charsets from 'charsets.js';
 
@@ -41,10 +41,11 @@ import Charsets from 'charsets.js';
 
         return ret;
     }
-    var wordList = johnList.reduce(function(acc, val){
+    /*var wordList = _wordList.reduce(function(acc, val){
         allSubstitution(val).forEach(v => acc.push(v.toLowerCase()));
         return acc;
-    }, []);
+    }, []);*/
+    var wordList = _wordList;
     function getTime(d)
     {
         var r = {};

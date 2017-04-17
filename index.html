@@ -13,10 +13,10 @@
             });
             $("#threshhold").val($("#password").checkPassword("option", "threshhold"));
             $("#threshhold").on("input paste", function(){
-                $("#password").checkPassword("option", "threshhold", parseInt($(this).val()));
+                if (parseFloat($(this).val()) > 0)
+                        $("#password").checkPassword("option", "threshhold", parseFloat($(this).val()));
             });
             $("#dictionary").prop("checked", $("#password").checkPassword("option", "dict"));
-            $
             $("#dictionary").change(function(){
                 $("#password").checkPassword("option", "dict", $(this).prop("checked"));
             })
